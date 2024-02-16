@@ -3,10 +3,12 @@ This is for I am able to remember what to work on and what should kinda be the w
 Get a Base Form
     Work on a Mana type (maybe good idea to make Multiple types)
     Make test Items For up and down Mana type
+    Low: Gender System
 
 Curse Work:
     Make a Curse Menu (Key-bind: none)
     Make a Low Tier Curse (Ask for ideas)
+
 
 Spell Work:
     Make a Mana Bar (Location: Bottom Right (Try Making Movable))
