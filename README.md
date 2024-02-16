@@ -6,11 +6,6 @@ Get a Base Form
 
 Curse Work
     Make a Low Tier Curse (Ask for ideas)
-    Tier 1: Gave and take (Suggested by Amber Dragon)
-        Bad things will happen to the Cursed but then a random player will gain something from the  (MP Only)
-    Tier 2: LifeBane (Suggested by Amber Dragon)
-        Permanently takes half of your health (Both)
-
 
 Spell Work
     Make Book Item
