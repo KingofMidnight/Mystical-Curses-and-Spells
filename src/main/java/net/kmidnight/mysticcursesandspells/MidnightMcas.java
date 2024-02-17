@@ -1,4 +1,4 @@
-package net.kmidnight.myticcursesandspells;
+package net.kmidnight.mysticcursesandspells;
 
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
