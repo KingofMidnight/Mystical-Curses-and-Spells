@@ -1,25 +1,26 @@
 This is for I am able to remember what to work on and what should kinda be the way things should go
 
 Get a Base Form
+    Work on a command to access Both systems for can Work can be done
     Work on a Mana type (maybe good idea to make Multiple types)
     Make test Items For up and down Mana type
     Low: Gender System
 
-Curse Work:
-    Make a Curse Menu (Key-bind: none)
-    Make a Low Tier Curse (Ask for ideas)
+    Curse Work:
+        Make a Curse Menu (Key-bind: none)
+        Make a Low Tier Curse (Ask for ideas)
 
 
-Spell Work:
-    Make a Mana Bar (Location: Bottom Right (Try Making Movable))
-    Make Book Item
-    Make Book Item to do Effect of a type of Spell
+    Spell Work:
+        Make a Mana Bar (Location: Bottom Right (Try Making Movable))
+        Make Book Item
+        Make Book Item to do Effect of a type of Spell
 
-Art Work:
-    Needing:
-    Curse Menu:
-    Purple type
-    Curse looking
-    Box with purple outline, with a part of the top of the menu should have another box that is going to houses a Curse icon Under this box make a area where a description will be put, and the right side of the box top to bottom should be open for going to be Curse box
-    256x256 or 512x512
-    Don't take up the whole image frame becauses going to need some space for other parts of the menu that will go over to the first part of the menu
+    Art Work:
+        Needing:
+        Curse Menu:
+        Purple type
+        Curse looking
+        Box with purple outline, with a part of the top of the menu should have another box that is going to houses a Curse icon Under this box make a area where a description will be put, and the right side of the box top to bottom should be open for going to be Curse box
+        256x256 or 512x512
+        Don't take up the whole image frame because going to need some space for other parts of the menu that will go over to the first part of the menu
