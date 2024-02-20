@@ -1,4 +1,4 @@
 package net.kmidnight.mysticcursesandspells.curse;
 
-public class CurseSystem {
+public class CurseManager {
 }
