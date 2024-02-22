@@ -1,4 +1,4 @@
-package net.kmidnight.mysticcursesandspells;
+package net.kmidnight.mysticalcursesandspells;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;

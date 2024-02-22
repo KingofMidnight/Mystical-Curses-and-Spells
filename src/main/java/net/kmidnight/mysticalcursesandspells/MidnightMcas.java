@@ -1,7 +1,7 @@
-package net.kmidnight.mysticcursesandspells;
+package net.kmidnight.mysticalcursesandspells;
 
 import com.mojang.logging.LogUtils;
-import net.kmidnight.mysticcursesandspells.item.ModItems;
+import net.kmidnight.mysticalcursesandspells.item.ModItems;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 public class MidnightMcas
 {
     // Define mod id in a common place for everything to reference
-    public static final String MOD_ID = "mysticcursesandspells";
+    public static final String MOD_ID = "mysticalcursesandspells";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
