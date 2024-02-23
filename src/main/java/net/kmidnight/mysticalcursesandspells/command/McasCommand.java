@@ -1,4 +1,4 @@
-package net.kmidnight.mysticcursesandspells.command;
+package net.kmidnight.mysticalcursesandspells.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;

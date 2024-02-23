@@ -1,6 +1,6 @@
-package net.kmidnight.mysticcursesandspells.item;
+package net.kmidnight.mysticalcursesandspells.item;
 
-import net.kmidnight.mysticcursesandspells.MidnightMcas;
+import net.kmidnight.mysticalcursesandspells.MidnightMcas;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
