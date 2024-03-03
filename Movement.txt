@@ -4,19 +4,19 @@ Get a Base Form
     Work on a command to access Both systems for can Work can be done
     Work on a Mana type (maybe good idea to make Multiple types)
     Make test Items For up and down Mana type
-    Low: Gender System
+    Low Priority: Gender System
 
     Curse Work:
+        High Priority: Work on the Curse Manager and Curse.java files (Should help start the spell work)
+        Make a Low Tier Curse, selected "lifebane" = Half Health Gone (most in issues on github)
         Make a Curse Menu (Key-bind: none)
-        Make a Low Tier Curse (Ask for ideas)
-
 
     Spell Work:
         Make a Mana Bar (Location: Bottom Right (Try Making Movable))
         Make Book Item
         Make Book Item to do Effect of a type of Spell
 
-    Art Work:
+    Low Priority: Art Work:
         Needing:
         Curse Menu:
         Purple type
