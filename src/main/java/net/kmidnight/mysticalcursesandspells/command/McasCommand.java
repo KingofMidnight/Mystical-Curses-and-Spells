@@ -1,9 +1,13 @@
 package net.kmidnight.mysticalcursesandspells.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import net.kmidnight.mysticalcursesandspells.curse.Curse;
+import net.kmidnight.mysticalcursesandspells.curse.CurseManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+
+import java.util.List;
 
 public class McasCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -40,5 +44,10 @@ public class McasCommand {
                 )
             )
         );
+    }
+
+    public static int listCurses(CommandSourceStack source) {
+        List<Curse> curses = CurseManager.getAllCurses();
+        return ; // so far i don't think this works
     }
 }

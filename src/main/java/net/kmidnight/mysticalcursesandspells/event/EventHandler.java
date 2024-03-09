@@ -13,6 +13,7 @@ public class EventHandler {
     public static void commandRegister(RegisterCommandsEvent event) {
         McasCommand.register(event.getDispatcher());
     }
+
     private EventHandler() {
     }
 }
