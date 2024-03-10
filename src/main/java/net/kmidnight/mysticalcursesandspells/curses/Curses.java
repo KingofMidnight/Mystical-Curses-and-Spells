@@ -13,8 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class Curses {
-    public static final DeferredRegister<AbstractCurse> CURSES =
-        DeferredRegister.create(new ResourceLocation(MidnightMcas.MOD_ID, "curse"), MidnightMcas.MOD_ID);
+    public static final DeferredRegister<AbstractCurse> CURSES = DeferredRegister.create(new ResourceLocation(MidnightMcas.MOD_ID, "curse"), MidnightMcas.MOD_ID);
 
     public static final Supplier<IForgeRegistry<AbstractCurse>> REGISTRY = CURSES.makeRegistry(RegistryBuilder::new);
 
