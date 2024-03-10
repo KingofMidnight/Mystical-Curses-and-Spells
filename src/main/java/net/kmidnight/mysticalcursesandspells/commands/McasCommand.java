@@ -1,12 +1,16 @@
-package net.kmidnight.mysticalcursesandspells.command;
+package net.kmidnight.mysticalcursesandspells.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.kmidnight.mysticalcursesandspells.curse.Curse;
-import net.kmidnight.mysticalcursesandspells.curse.CurseManager;
+import net.kmidnight.mysticalcursesandspells.curses.Curses;
+import net.kmidnight.mysticalcursesandspells.curses.CurseManager;
+import net.kmidnight.mysticalcursesandspells.curses.custom.AbstractCurse;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.world.entity.LivingEntity;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class McasCommand {
@@ -17,8 +21,9 @@ public class McasCommand {
                 .then(Commands.argument("target", EntityArgument.players())
                     .then(Commands.literal("list")
                     )
-                    .then(Commands.literal("grant")
-                    )
+                    .then(Commands.literal("grant").executes(pCommandSourceStack -> {
+                        return cast(pCommandSourceStack.getSource(), EntityArgument.getPlayers(pCommandSourceStack, "target"));
+                    }))
                     .then(Commands.literal("removal")
                     )
                 )
@@ -47,7 +52,17 @@ public class McasCommand {
     }
 
     public static int listCurses(CommandSourceStack source) {
-        List<Curse> curses = CurseManager.getAllCurses();
-        return ; // so far i don't think this works
+        List<AbstractCurse> curses = CurseManager.getAllCurses();
+        return 0;
+    }
+
+    private static int cast(CommandSourceStack pSource, Collection<? extends LivingEntity> pTargets) {
+        Iterator targets = pTargets.iterator();
+
+        while(targets.hasNext()) {
+            Curses.LIFEBANE.get().cast((LivingEntity) targets.next());
+        }
+
+        return pTargets.size();
     }
 }

@@ -1,7 +1,7 @@
 package net.kmidnight.mysticalcursesandspells;
 
 import com.mojang.logging.LogUtils;
-import net.kmidnight.mysticalcursesandspells.curse.Curse;
+import net.kmidnight.mysticalcursesandspells.curses.Curses;
 import net.kmidnight.mysticalcursesandspells.item.ModItems;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,7 +32,7 @@ public class MidnightMcas
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(modEventBus);
-        Curse.register(modEventBus);
+        Curses.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);

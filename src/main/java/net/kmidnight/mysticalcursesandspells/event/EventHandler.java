@@ -1,7 +1,7 @@
 package net.kmidnight.mysticalcursesandspells.event;
 
 import net.kmidnight.mysticalcursesandspells.MidnightMcas;
-import net.kmidnight.mysticalcursesandspells.command.McasCommand;
+import net.kmidnight.mysticalcursesandspells.commands.McasCommand;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
