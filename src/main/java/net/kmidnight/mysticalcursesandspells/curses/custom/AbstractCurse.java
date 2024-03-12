@@ -10,8 +10,9 @@ public abstract class AbstractCurse {
     public abstract String getName();
     public abstract void cast(LivingEntity pLivingEntity);
     public abstract void undo(LivingEntity pLivingEntity);
+
     public KMTier getConfigTier() {
-        return CurseTier = null ? defaultTier() : KMTier.TIER_MAP.get(KMTier.get);
+        return CURSE_TIER == null ? defaultTier() : KMTier.TIER_MAP.get(CURSE_TIER.get());
     }
 
     public KMTier getTier() {
@@ -22,4 +23,11 @@ public abstract class AbstractCurse {
         return getTier();
     }
 
+    public @Nullable ForgeConfigSpec.IntValue CURSE_TIER;
+
+
+    public void buildConfigCurse(ForgeConfigSpec.Builder builder) {
+        builder.comment("General settings").push("general");
+        CURSE_TIER = builder.comment("The Curse Tier").defineInRange("curse_tier", defaultTier().value, 1, 8);
+    }
 }

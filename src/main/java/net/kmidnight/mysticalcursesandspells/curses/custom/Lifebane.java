@@ -1,6 +1,7 @@
 package net.kmidnight.mysticalcursesandspells.curses.custom;
 
 
+import net.kmidnight.mysticalcursesandspells.api.KMTier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
@@ -18,5 +19,10 @@ public class Lifebane extends AbstractCurse {
     @Override
     public String getName() {
         return "Lifebane";
+    }
+
+    @Override
+    public KMTier defaultTier() {
+        return KMTier.ONE;
     }
 }
