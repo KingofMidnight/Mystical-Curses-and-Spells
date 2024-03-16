@@ -13,11 +13,11 @@ public class Firelight extends AbstractSpell {
 
     @Override
     public void cast(LivingEntity pLivingEntity) {
-        public void onEntityHit() {
+        /* public void onEntityHit() {
         }
 
         public void onBlockHit() {
-        }
+        } */
     }
 
     @Override

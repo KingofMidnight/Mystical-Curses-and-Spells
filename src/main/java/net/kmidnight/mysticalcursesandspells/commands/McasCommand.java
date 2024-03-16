@@ -2,7 +2,6 @@ package net.kmidnight.mysticalcursesandspells.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.kmidnight.mysticalcursesandspells.curses.Curses;
-import net.kmidnight.mysticalcursesandspells.curses.CurseManager;
 import net.kmidnight.mysticalcursesandspells.curses.custom.AbstractCurse;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -52,7 +51,7 @@ public class McasCommand {
     }
 
     public static int listCurses(CommandSourceStack source) {
-        List<AbstractCurse> curses = CurseManager.getAllCurses();
+        List<AbstractCurse> curses = Curses.getAllCurses();
         return 0;
     }
 
