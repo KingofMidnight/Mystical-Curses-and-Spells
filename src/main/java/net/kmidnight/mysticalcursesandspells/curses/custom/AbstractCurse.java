@@ -12,7 +12,9 @@ public abstract class AbstractCurse {
     public abstract void undo(LivingEntity pLivingEntity);
 
     public KMTier getConfigTier() {
-        return CURSE_TIER == null ? defaultTier() : KMTier.TIER_MAP.get(CURSE_TIER.get());
+        if (CURSE_TIER == null) return defaultTier();
+        KMTier tier = KMTier.TIER_MAP.get(CURSE_TIER.get());
+        return tier != null ? tier : defaultTier();
     }
 
     public KMTier getTier() {

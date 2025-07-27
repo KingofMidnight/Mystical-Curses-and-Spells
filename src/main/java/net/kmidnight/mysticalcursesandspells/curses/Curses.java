@@ -16,17 +16,13 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class Curses {
-    public static List<AbstractCurse> curses;
-
-    public void CurseList() {
-        curses = new ArrayList<>();
-    }
+    public static List<AbstractCurse> curses= new ArrayList<>();
 
     public static final DeferredRegister<AbstractCurse> CURSES = DeferredRegister.create(new ResourceLocation(MidnightMcas.MOD_ID, "curse"), MidnightMcas.MOD_ID);
 
     public static final Supplier<IForgeRegistry<AbstractCurse>> REGISTRY = CURSES.makeRegistry(RegistryBuilder::new);
 
-    public static final RegistryObject<AbstractCurse> LIFEBANE = CURSES.register("Lifebane", () -> new Lifebane());
+    public static final RegistryObject<AbstractCurse> LIFEBANE = CURSES.register("lifebane", () -> new Lifebane());
 
     public static void register(IEventBus eventBus) {
         CURSES.register(eventBus);
@@ -36,7 +32,7 @@ public class Curses {
         curses.add(curse);
     }
 
-    public void removeCurse(Curses curse) {
+    public void removeCurse(AbstractCurse curse) {
         curses.remove(curse);
     }
 
