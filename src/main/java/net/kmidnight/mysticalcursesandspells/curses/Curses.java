@@ -11,34 +11,37 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class Curses {
-    public static List<AbstractCurse> curses= new ArrayList<>();
+    public static List<AbstractCurse> curses = new ArrayList<>();
+    private static final Map<UUID, Set<String>> playerCurses = new HashMap<>();
 
-    public static final DeferredRegister<AbstractCurse> CURSES = DeferredRegister.create(new ResourceLocation(MidnightMcas.MOD_ID, "curse"), MidnightMcas.MOD_ID);
+    public static final DeferredRegister<AbstractCurse> CURSES =
+            DeferredRegister.create(new ResourceLocation(MidnightMcas.MOD_ID, "curse"), MidnightMcas.MOD_ID);
 
-    public static final Supplier<IForgeRegistry<AbstractCurse>> REGISTRY = CURSES.makeRegistry(RegistryBuilder::new);
+    public static final Supplier<IForgeRegistry<AbstractCurse>> REGISTRY =
+            CURSES.makeRegistry(() -> new RegistryBuilder<AbstractCurse>()
+                    .setName(new ResourceLocation(MidnightMcas.MOD_ID, "curse")));
 
     public static final RegistryObject<AbstractCurse> LIFEBANE = CURSES.register("lifebane", () -> new Lifebane());
 
-    public static void register(IEventBus eventBus) {
-        CURSES.register(eventBus);
+    public static void addCurseToPlayer(UUID playerUUID, String curseName) {
+        playerCurses.computeIfAbsent(playerUUID, k -> new HashSet<>()).add(curseName);
     }
 
-    public void addCurse(AbstractCurse curse) {
-        curses.add(curse);
+    public static Set<String> getPlayerCurses(UUID playerUUID) {
+        return playerCurses.getOrDefault(playerUUID, new HashSet<>());
     }
 
-    public void removeCurse(AbstractCurse curse) {
-        curses.remove(curse);
-    }
-
-    public void applyCurse(Player player) {
-        for (AbstractCurse curse : curses) {
-            curse.cast(player);
+    public static void removeCurseFromPlayer(UUID playerUUID, String curseName) {
+        Set<String> curses = playerCurses.get(playerUUID);
+        if (curses != null) {
+            curses.remove(curseName);
+            if (curses.isEmpty()) {
+                playerCurses.remove(playerUUID);
+            }
         }
     }
 
@@ -46,4 +49,7 @@ public class Curses {
         return curses;
     }
 
+    public static void register(IEventBus eventBus) {
+        CURSES.register(eventBus);
+    }
 }
