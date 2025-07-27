@@ -27,7 +27,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void commandRegister(RegisterCommandsEvent event) {
+    public static void onCommandRegister(RegisterCommandsEvent event) {
         McasCommand.register(event.getDispatcher());
     }
 
