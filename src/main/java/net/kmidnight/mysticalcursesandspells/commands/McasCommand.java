@@ -15,10 +15,8 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,13 +38,13 @@ public class McasCommand {
                                 )
                                 .then(Commands.literal("grant")
                                         .then(Commands.argument("curse", StringArgumentType.string())
-                                                .suggests(CURSE_IDS)
+                                                .suggests(CurseSuggestions.CURSE_IDS)
                                                 .executes(context -> grantCurse(context))
                                         )
                                 )
                                 .then(Commands.literal("remove")
                                         .then(Commands.argument("curse", StringArgumentType.string())
-                                                .suggests(CURSE_IDS)
+                                                .suggests(CurseSuggestions.CURSE_IDS)
                                                 .executes(context -> removeCurse(context))
                                         )
                                 )
@@ -137,101 +135,120 @@ public class McasCommand {
         return targets.size();
     }
 
-    // Grants a specific curse to the target players
-    private static int grantCurse(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        Collection<ServerPlayer> targets = EntityArgument.getPlayers(context, "target");
-        String curseName = StringArgumentType.getString(context, "curse");
+    private static int grantCurse(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
 
-        if (targets.isEmpty()) {
-            source.sendFailure(Component.literal("No valid targets found."));
-            return 0;
-        }
+        try {
+            // Make sure this matches your argument registration name
+            String curseName = StringArgumentType.getString(context, "curse");
+            Collection<ServerPlayer> targets = EntityArgument.getPlayers(context, "target");
 
-        AbstractCurse curse = getCurse(context);
-        if (curse == null) {
-            source.sendFailure(Component.literal("Unknown curse: " + curseName));
-            return 0;
-        }
+            // Debug logging
+            source.sendSuccess(() -> Component.literal("Attempting to grant curse: " + curseName), false);
 
-        int successCount = 0;
-        for (ServerPlayer player : targets) {
-            try {
-                // Apply the curse
-                curse.cast(player);
-
-                // Track the curse
-                Curses.addCurseToPlayer(player.getUUID(), curseName);
-
-                source.sendSuccess(() ->
-                                Component.literal("Applied curse '" + curseName + "' to " + player.getName().getString()),
-                        true);
-
-                // Notify the target player
-                player.sendSystemMessage(Component.literal("You have been cursed with: " + curseName));
-
-                successCount++;
-            } catch (Exception e) {
-                source.sendFailure(Component.literal("Failed to apply curse '" + curseName + "' to " +
-                        player.getName().getString() + ": " + e.getMessage()));
+            // Check if curse registry is initialized
+            if (Curses.REGISTRY == null || Curses.REGISTRY.get() == null) {
+                source.sendFailure(Component.literal("Curse registry not initialized!"));
+                return 0;
             }
-        }
 
-        return successCount;
+            // Get curse with proper namespace
+            ResourceLocation curseId = new ResourceLocation(
+                    curseName.contains(":") ? curseName : "mysticalcursesandspells:" + curseName
+            );
+            AbstractCurse curse = Curses.REGISTRY.get().getValue(curseId);
+
+            if (curse == null) {
+                source.sendFailure(Component.literal("Unknown curse: " + curseName + " (tried: " + curseId + ")"));
+                return 0;
+            }
+
+            if (targets.isEmpty()) {
+                source.sendFailure(Component.literal("No valid targets found."));
+                return 0;
+            }
+
+            // Apply curse to each target
+            for (ServerPlayer player : targets) {
+                try {
+                    curse.cast(player);
+                    Curses.addCurseToPlayer(player.getUUID(), curseName);
+                    source.sendSuccess(() -> Component.literal("Applied " + curseName + " to " + player.getName().getString()), true);
+                    player.sendSystemMessage(Component.literal("You have been cursed with " + curseName + "!"));
+                } catch (Exception e) {
+                    source.sendFailure(Component.literal("Failed to apply curse to " + player.getName().getString() + ": " + e.getMessage()));
+                    e.printStackTrace();
+                }
+            }
+
+            return targets.size();
+
+        } catch (Exception e) {
+            source.sendFailure(Component.literal("Command execution failed: " + e.getMessage()));
+            e.printStackTrace(); // This will show the actual error in console
+            return 0;
+        }
     }
+
 
     /**
      * Removes a specific curse from the target players
      */
-    private static int removeCurse(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        Collection<ServerPlayer> targets = EntityArgument.getPlayers(context, "target");
-        String curseName = StringArgumentType.getString(context, "curse");
+    private static int removeCurse(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
 
-        if (targets.isEmpty()) {
-            source.sendFailure(Component.literal("No valid targets found."));
-            return 0;
-        }
+        try {
+            // Make sure this matches your argument registration name
+            String curseName = StringArgumentType.getString(context, "curse");
+            Collection<ServerPlayer> targets = EntityArgument.getPlayers(context, "target");
 
-        AbstractCurse curse = getCurse(context);
-        if (curse == null) {
-            source.sendFailure(Component.literal("Unknown curse: " + curseName));
-            return 0;
-        }
+            // Debug logging
+            source.sendSuccess(() -> Component.literal("Attempting to remove curse: " + curseName), false);
 
-        int successCount = 0;
-        for (ServerPlayer player : targets) {
-            Set<String> playerCurses = Curses.getPlayerCurses(player.getUUID());
-
-            if (!playerCurses.contains(curseName)) {
-                source.sendFailure(Component.literal("Player " + player.getName().getString() +
-                        " does not have curse: " + curseName));
-                continue;
+            // Check if curse registry is initialized
+            if (Curses.REGISTRY == null || Curses.REGISTRY.get() == null) {
+                source.sendFailure(Component.literal("Curse registry not initialized!"));
+                return 0;
             }
 
-            try {
-                // Remove the curse effect
-                curse.undo(player);
+            // Get curse with proper namespace
+            ResourceLocation curseId = new ResourceLocation(
+                    curseName.contains(":") ? curseName : "mysticalcursesandspells:" + curseName
+            );
+            AbstractCurse curse = Curses.REGISTRY.get().getValue(curseId);
 
-                // Remove from tracking
-                Curses.removeCurseFromPlayer(player.getUUID(), curseName);
-
-                source.sendSuccess(() ->
-                                Component.literal("Removed curse '" + curseName + "' from " + player.getName().getString()),
-                        true);
-
-                // Notify the target player
-                player.sendSystemMessage(Component.literal("The curse '" + curseName + "' has been lifted from you."));
-
-                successCount++;
-            } catch (Exception e) {
-                source.sendFailure(Component.literal("Failed to remove curse '" + curseName + "' from " +
-                        player.getName().getString() + ": " + e.getMessage()));
+            if (curse == null) {
+                source.sendFailure(Component.literal("Unknown curse: " + curseName + " (tried: " + curseId + ")"));
+                return 0;
             }
-        }
 
-        return successCount;
+            if (targets.isEmpty()) {
+                source.sendFailure(Component.literal("No valid targets found."));
+                return 0;
+            }
+
+            // Apply curse to each target
+            for (ServerPlayer player : targets) {
+                try {
+                    curse.undo(player);
+                    Curses.removeCurseFromPlayer(player.getUUID(), curseName);
+                    source.sendSuccess(() -> Component.literal("Removed " + curseName + " from " + player.getName().getString()), true);
+                    player.sendSystemMessage(Component.literal("The " + curseName + " curse has been lifted!"));
+                } catch (Exception e) {
+                    source.sendFailure(Component.literal("Failed to remove curse from " + player.getName().getString() + ": " + e.getMessage()));
+                    e.printStackTrace();
+                }
+            }
+
+            return targets.size();
+
+        } catch (Exception e) {
+            source.sendFailure(Component.literal("Command execution failed: " + e.getMessage()));
+            e.printStackTrace(); // This will show the actual error in console
+            return 0;
+        }
     }
+
 
     /**
      * Removes all curses from the target players
@@ -330,7 +347,9 @@ public class McasCommand {
         return curse;
     }
 
-    public static final SuggestionProvider<CommandSourceStack> CURSE_IDS = (
-        context, builder) -> SharedSuggestionProvider.suggest(
-            Curses.streamIds().map(ResourceLocation::getPath), builder);
+    public static final class CurseSuggestions {
+        public static final SuggestionProvider<CommandSourceStack> CURSE_IDS =
+                (context, builder) -> SharedSuggestionProvider.suggest(
+                        Curses.streamIds().map(ResourceLocation::getPath), builder);
+    }
 }

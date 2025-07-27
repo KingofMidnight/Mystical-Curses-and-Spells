@@ -45,6 +45,10 @@ public class Curses {
         }
     }
 
+    public static Stream<AbstractCurse> streamAll() {
+        return REGISTRY.get().getValues().stream();
+    }
+
     public static Stream<ResourceLocation> streamIds() {
         return REGISTRY.get().getKeys().stream();
     }
