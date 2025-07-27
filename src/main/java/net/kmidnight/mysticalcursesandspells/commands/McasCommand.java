@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class McasCommand {
 
@@ -53,7 +54,7 @@ public class McasCommand {
                                         .executes(context -> clearCurses(context))
                                 )
                         )
-                        .then(Commands.literal("list_all")
+                        .then(Commands.literal("listall")
                                 .executes(context -> listAllCurses(context))
                         )
                 )
@@ -139,7 +140,7 @@ public class McasCommand {
     // Grants a specific curse to the target players
     private static int grantCurse(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         Collection<ServerPlayer> targets = EntityArgument.getPlayers(context, "target");
-        String curseName = StringArgumentType.getString(context, "curse_name");
+        String curseName = StringArgumentType.getString(context, "curse");
         CommandSourceStack source = context.getSource();
 
         if (targets.isEmpty()) {
@@ -184,7 +185,7 @@ public class McasCommand {
      */
     private static int removeCurse(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         Collection<ServerPlayer> targets = EntityArgument.getPlayers(context, "target");
-        String curseName = StringArgumentType.getString(context, "curse_name");
+        String curseName = StringArgumentType.getString(context, "curse");
         CommandSourceStack source = context.getSource();
 
         if (targets.isEmpty()) {
@@ -258,20 +259,20 @@ public class McasCommand {
             var ref = new Object() {
                 int removedCount = 0;
             };
-            // Create a copy to avoid concurrent modification
             Set<String> cursesToRemove = Set.copyOf(playerCurses);
 
             for (String curseName : cursesToRemove) {
-                AbstractCurse curse = getCurse(context);
-                if (curse != null) {
-                    try {
+                try {
+                    ResourceLocation curseId = new ResourceLocation("mysticalcursesandspells:" + curseName);
+                    AbstractCurse curse = Curses.REGISTRY.get().getValue(curseId);
+                    if (curse != null) {
                         curse.undo(player);
                         Curses.removeCurseFromPlayer(player.getUUID(), curseName);
                         ref.removedCount++;
-                    } catch (Exception e) {
-                        source.sendFailure(Component.literal("Failed to remove curse '" + curseName +
-                                "' from " + player.getName().getString() + ": " + e.getMessage()));
                     }
+                } catch (Exception e) {
+                    source.sendFailure(Component.literal("Failed to remove curse '" + curseName +
+                            "' from " + player.getName().getString() + ": " + e.getMessage()));
                 }
             }
 
@@ -293,32 +294,21 @@ public class McasCommand {
      */
     private static int listAllCurses(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-
-        // For now, we only have lifebane. This can be expanded as more curses are added.
-        source.sendSuccess(() ->
-                        Component.literal("Available curses: lifebane"),
-                false);
-
-        // Future implementation could look like this:
-        // List<AbstractCurse> allCurses = Curses.getAllCurses();
-        // if (allCurses.isEmpty()) {
-        //     source.sendSuccess(() -> Component.literal("No curses are currently available."), false);
-        // } else {
-        //     StringBuilder curseList = new StringBuilder("Available curses: ");
-        //     for (int i = 0; i < allCurses.size(); i++) {
-        //         if (i > 0) curseList.append(", ");
-        //         curseList.append(allCurses.get(i).getClass().getSimpleName().toLowerCase());
-        //     }
-        //     source.sendSuccess(() -> Component.literal(curseList.toString()), false);
-        // }
-
+        List<String> curseNames = Curses.streamIds()
+                .map(ResourceLocation::getPath)
+                .sorted()
+                .collect(Collectors.toList());
+        if (curseNames.isEmpty()) {
+            source.sendSuccess(() -> Component.literal("No curses are currently available."), false);
+        } else {
+            String curseList = "Available curses: " + String.join(", ", curseNames);
+            source.sendSuccess(() -> Component.literal(curseList), false);
+        }
         return 1;
     }
 
-    // Shows help information for the mcas command
     private static int showHelp(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-
         source.sendSuccess(() -> Component.literal("=== Mystical Curses and Spells Commands ==="), false);
         source.sendSuccess(() -> Component.literal("/mcas curse <player> list - List active curses on player"), false);
         source.sendSuccess(() -> Component.literal("/mcas curse <player> grant <curse> - Grant curse to player"), false);
@@ -328,7 +318,6 @@ public class McasCommand {
         source.sendSuccess(() -> Component.literal("/mcas spell <player> ... - Spell commands (not yet implemented)"), false);
         source.sendSuccess(() -> Component.literal("/mcas mana-type <player> ... - Mana commands (not yet implemented)"), false);
         source.sendSuccess(() -> Component.literal("/mcas help - Show this help message"), false);
-
         return 1;
     }
 

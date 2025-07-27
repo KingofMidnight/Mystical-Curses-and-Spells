@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class Curses {
-    public static List<AbstractCurse> curses = new ArrayList<>();
     private static final Map<UUID, Set<String>> playerCurses = new HashMap<>();
 
     public static final DeferredRegister<AbstractCurse> CURSES =
@@ -44,14 +43,6 @@ public class Curses {
                 playerCurses.remove(playerUUID);
             }
         }
-    }
-
-    public static List<AbstractCurse> getAllCurses() {
-        return curses;
-    }
-
-    public static Stream<AbstractCurse> streamAll() {
-        return REGISTRY.get().getValues().stream();
     }
 
     public static Stream<ResourceLocation> streamIds() {
