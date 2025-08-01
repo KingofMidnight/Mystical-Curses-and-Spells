@@ -3,6 +3,7 @@ package net.kmidnight.mysticalcursesandspells.api;
 import net.kmidnight.mysticalcursesandspells.MidnightMcas;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CurseTier {
@@ -31,4 +32,30 @@ public class CurseTier {
         return tier;
     }
 
+    public static CurseTier fromValue(int value) {
+        return TIER_MAP.get(value);
+    }
+
+    public static CurseTier[] range(int minTier, int maxTier) {
+        return TIER_MAP.values().stream()
+                .filter(tier -> tier.value >= minTier && tier.value <= maxTier)
+                .toArray(CurseTier[]::new);
+    }
+
+    public boolean isHigherThan(CurseTier other) {
+        return this.value > other.value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        CurseTier curseTier = (CurseTier) obj;
+        return value == curseTier.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 }

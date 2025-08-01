@@ -6,7 +6,11 @@ import net.minecraft.world.entity.LivingEntity;
 public class TheOneAndTheChance extends AbstractCurse{
     @Override
     public void cast(LivingEntity pLivingEntity) {
-
+        double realTntChance = switch (getActiveTier().value) {
+            case 1 -> 0.25;
+            case 3 -> 0.50;
+            default -> 0.25;
+        };
     }
 
     @Override
@@ -20,8 +24,12 @@ public class TheOneAndTheChance extends AbstractCurse{
     }
 
     @Override
-    public CurseTier CurseTier() {
-        return null;
+    public CurseTier getDefaultTier() {
+        return CurseTier.ONE;
     }
 
+    @Override
+    public CurseTier[] getSupportedTiers() {
+        return new CurseTier[]{CurseTier.ONE,CurseTier.THREE};
+    }
 }

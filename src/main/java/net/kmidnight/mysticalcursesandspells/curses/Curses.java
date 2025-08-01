@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class Curses {
-    private static final Map<UUID, Set<String>> playerCurses = new HashMap<>();
+    private static final Map<UUID, Map<String, Integer>> playerCurses = new HashMap<>();
 
     public static final DeferredRegister<AbstractCurse> CURSES =
             DeferredRegister.create(new ResourceLocation(MidnightMcas.MOD_ID, "curse"), MidnightMcas.MOD_ID);
@@ -27,22 +27,41 @@ public class Curses {
 
     public static final RegistryObject<AbstractCurse> LIFEBANE = CURSES.register("lifebane", () -> new Lifebane());
 
-    public static void addCurseToPlayer(UUID playerUUID, String curseName) {
-        playerCurses.computeIfAbsent(playerUUID, k -> new HashSet<>()).add(curseName);
+    public static void addCurseToPlayer(UUID playerUUID, String curseName, int tier) {
+        playerCurses.computeIfAbsent(playerUUID, k -> new HashMap<>()).put(curseName, tier);
     }
 
     public static Set<String> getPlayerCurses(UUID playerUUID) {
-        return playerCurses.getOrDefault(playerUUID, new HashSet<>());
+        Map<String, Integer> curses = playerCurses.get(playerUUID);
+        return curses != null ? curses.keySet() : new HashSet<>();
+    }
+
+    public static Map<String, Integer> getPlayerCursesWithTiers(UUID playerUUID) {
+        return playerCurses.getOrDefault(playerUUID, new HashMap<>());
+    }
+
+    public static int getPlayerCurseTier(UUID playerUUID, String curseName) {
+        Map<String, Integer> curses = playerCurses.get(playerUUID);
+        return curses != null ? curses.getOrDefault(curseName, 1) : 1;
     }
 
     public static void removeCurseFromPlayer(UUID playerUUID, String curseName) {
-        Set<String> curses = playerCurses.get(playerUUID);
+        Map<String, Integer> curses = playerCurses.get(playerUUID);
         if (curses != null) {
             curses.remove(curseName);
             if (curses.isEmpty()) {
                 playerCurses.remove(playerUUID);
             }
         }
+    }
+
+    public static boolean hasPlayerCurse(UUID playerUUID, String curseName) {
+        Map<String, Integer> curses = playerCurses.get(playerUUID);
+        return curses != null && curses.containsKey(curseName);
+    }
+
+    public static ResourceLocation getCurseId(String curseName) {
+        return new ResourceLocation(curseName.contains(":") ? curseName : MidnightMcas.MOD_ID + ":" + curseName);
     }
 
     public static Stream<AbstractCurse> streamAll() {

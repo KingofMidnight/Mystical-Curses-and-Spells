@@ -14,7 +14,7 @@ public class Lifebane extends AbstractCurse {
     @Override
     public void cast(LivingEntity entity) {
         var attribute = entity.getAttribute(Attributes.MAX_HEALTH);
-        if (attribute != null && attribute.getModifier(LIFEBANE_MODIFIER_UUID) == null) {  // Only add if not already present
+        if (attribute != null && attribute.getModifier(LIFEBANE_MODIFIER_UUID) == null) {
             AttributeModifier modifier = new AttributeModifier(
                     LIFEBANE_MODIFIER_UUID, "Lifebane curse", -0.5, AttributeModifier.Operation.MULTIPLY_BASE
             );
@@ -36,8 +36,12 @@ public class Lifebane extends AbstractCurse {
     }
 
     @Override
-    public CurseTier CurseTier() {
+    public CurseTier getDefaultTier() {
         return CurseTier.ONE;
     }
 
+    @Override
+    public CurseTier[] getSupportedTiers() {
+        return new CurseTier[]{CurseTier.ONE};
+    }
 }
