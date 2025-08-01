@@ -1,15 +1,9 @@
 package net.kmidnight.mysticalcursesandspells.spells.custom;
 
-import net.kmidnight.mysticalcursesandspells.api.KMTier;
+import net.kmidnight.mysticalcursesandspells.api.CurseTier;
 import net.minecraft.world.entity.LivingEntity;
 
 public class Firelight extends AbstractSpell {
-
-
-    @Override
-    public String getName() {
-        return "Firelight";
-    }
 
     @Override
     public void cast(LivingEntity pLivingEntity) {
@@ -21,7 +15,12 @@ public class Firelight extends AbstractSpell {
     }
 
     @Override
-    public KMTier defaultTier() {
-        return KMTier.ONE;
+    public String getName() {
+        return "Firelight";
+    }
+
+    @Override
+    public CurseTier SpellTier() {
+        return CurseTier.ONE;
     }
 }
